@@ -1,0 +1,293 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - FECESA Admin{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1">Welcome back, {{ current_user.username }}!</h2>
+        <p class="text-muted">Here's what's happening with your site today.</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-lg-3 col-md-6">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="fw-bold mb-1">{{ stats.total_news }}</h3>
+                        <p class="mb-0">Total News</p>
+                        <small class="opacity-75">{{ stats.published_news }} published</small>
+                    </div>
+                    <div class="text-end">
+                        <i class="fas fa-newspaper" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card stat-card success h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="fw-bold mb-1">{{ stats.total_blogs }}</h3>
+                        <p class="mb-0">Blog Posts</p>
+                        <small class="opacity-75">Content library</small>
+                    </div>
+                    <div class="text-end">
+                        <i class="fas fa-blog" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card stat-card warning h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="fw-bold mb-1">{{ stats.total_programs }}</h3>
+                        <p class="mb-0">Programs</p>
+                        <small class="opacity-75">Academic offerings</small>
+                    </div>
+                    <div class="text-end">
+                        <i class="fas fa-graduation-cap" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card stat-card info h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="fw-bold mb-1">{{ stats.total_mart_items }}</h3>
+                        <p class="mb-0">Mart Items</p>
+                        <small class="opacity-75">Student marketplace</small>
+                    </div>
+                    <div class="text-end">
+                        <i class="fas fa-store" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt text-primary me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{{ url_for('admin_news_create') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-plus me-2"></i>Add News
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{{ url_for('admin_blog_create') }}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-plus me-2"></i>Create Blog Post
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{{ url_for('admin_programs_create') }}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-plus me-2"></i>Add Program
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{{ url_for('admin_settings') }}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-cog me-2"></i>Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-newspaper text-primary me-2"></i>Recent News
+                </h5>
+                <a href="{{ url_for('admin_news') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if stats.recent_news %}
+                    <div class="list-group list-group-flush">
+                        {% for news in stats.recent_news %}
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ news.title }}</h6>
+                                    <p class="mb-1 text-muted small">{{ news.excerpt[:100] }}...</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ news.created_at.strftime('%b %d, %Y') }}
+                                        <span class="badge bg-{{ 'success' if news.status == 'published' else 'warning' }} ms-2">
+                                            {{ news.status.title() }}
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ url_for('admin_news_edit', id=news.id) }}">
+                                            <i class="fas fa-edit me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item text-danger" href="{{ url_for('admin_news_delete', id=news.id) }}" 
+                                               onclick="return confirmDelete()">
+                                            <i class="fas fa-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-newspaper text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="text-muted">No news articles yet</p>
+                        <a href="{{ url_for('admin_news_create') }}" class="btn btn-primary">Create First News Article</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-transparent d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-blog text-success me-2"></i>Recent Blog Posts
+                </h5>
+                <a href="{{ url_for('admin_blog') }}" class="btn btn-sm btn-outline-success">View All</a>
+            </div>
+            <div class="card-body">
+                {% if stats.recent_blogs %}
+                    <div class="list-group list-group-flush">
+                        {% for blog in stats.recent_blogs %}
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ blog.title }}</h6>
+                                    <p class="mb-1 text-muted small">By {{ blog.author_name }} - {{ blog.author_role }}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ blog.created_at.strftime('%b %d, %Y') }}
+                                        <span class="badge bg-{{ 'success' if blog.status == 'published' else 'warning' }} ms-2">
+                                            {{ blog.status.title() }}
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">
+                                            <i class="fas fa-edit me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item text-danger" href="#" onclick="return confirmDelete()">
+                                            <i class="fas fa-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-blog text-muted mb-3" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="text-muted">No blog posts yet</p>
+                        <a href="{{ url_for('admin_blog_create') }}" class="btn btn-success">Create First Blog Post</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics Chart -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line text-info me-2"></i>Content Analytics
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="analyticsChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Analytics Chart
+    const ctx = document.getElementById('analyticsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'News Articles',
+                data: [12, 19, 3, 5, 2, 3],
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Blog Posts',
+                data: [5, 8, 12, 15, 10, 8],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Content Creation Over Time'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    // Auto-refresh statistics every 30 seconds
+    setInterval(function() {
+        // In a real application, you would fetch updated statistics
+        console.log('Refreshing statistics...');
+    }, 30000);
+});
+</script>
+{% endblock %}

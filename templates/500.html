@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-3 text-warning">500</h1>
+    <h2 class="mb-3">Internal Server Error</h2>
+    <p class="lead text-muted mb-4">
+        Oops! Something went wrong on our end.<br>
+        Please try again later or contact support if the problem persists.
+    </p>
+    <a href="{{ url_for('student_mart') }}" class="btn btn-primary">
+        <i class="fas fa-home me-2"></i>Go to Student Mart
+    </a>
+</div>
+{%

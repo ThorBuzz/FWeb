@@ -1,0 +1,93 @@
+<!-- Blog Form Template (admin/blog/form.html) -->
+<div id="blog-form-template">
+{% extends "admin/base.html" %}
+
+{% block title %}{{ action }} Blog Post - FECESA Admin{% endblock %}
+{% block page_title %}{{ action }} Blog Post{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" id="blogForm">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               value="{{ blog.title if blog else '' }}" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="author_name" class="form-label">Author Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="author_name" name="author_name" 
+                                   value="{{ blog.author_name if blog else '' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="author_role" class="form-label">Author Role</label>
+                            <input type="text" class="form-control" id="author_role" name="author_role" 
+                                   value="{{ blog.author_role if blog else '' }}" placeholder="e.g., Professor, PhD Student">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="author_image" class="form-label">Author Image URL</label>
+                        <input type="url" class="form-control" id="author_image" name="author_image" 
+                               value="{{ blog.author_image if blog else '' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="excerpt" class="form-label">Excerpt</label>
+                        <textarea class="form-control" id="excerpt" name="excerpt" rows="3">{{ blog.excerpt if blog else '' }}</textarea>
+                        <div class="form-text">Brief summary for previews</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="content" name="content" rows="12" required>{{ blog.content if blog else '' }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="draft" {{ 'selected' if blog and blog.status == 'draft' else '' }}>Draft</option>
+                            <option value="published" {{ 'selected' if blog and blog.status == 'published' else '' }}>Published</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>{{ 'Update' if blog else 'Create' }} Post
+                        </button>
+                        <a href="{{ url_for('admin_blog') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h6 class="card-title mb-0">Blog Guidelines</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Writing Tips:</h6>
+                    <ul class="mb-0">
+                        <li>Write engaging, informative titles</li>
+                        <li>Include author credentials</li>
+                        <li>Use clear, accessible language</li>
+                        <li>Break up text with subheadings</li>
+                        <li>Include practical examples</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</div>
+

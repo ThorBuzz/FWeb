@@ -1,0 +1,161 @@
+<!-- Settings Template (admin/settings.html) -->
+<div id="settings-template">
+{% extends "admin/base.html" %}
+
+{% block title %}Settings - FECESA Admin{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <form method="POST">
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h6 class="card-title mb-0">Social Media & Links</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="facebook_url" class="form-label">Facebook URL</label>
+                            <input type="url" class="form-control" id="facebook_url" name="setting_facebook_url" 
+                                   value="{{ settings.get('facebook_url', '') }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="twitter_url" class="form-label">Twitter URL</label>
+                            <input type="url" class="form-control" id="twitter_url" name="setting_twitter_url" 
+                                   value="{{ settings.get('twitter_url', '') }}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="linkedin_url" class="form-label">LinkedIn URL</label>
+                            <input type="url" class="form-control" id="linkedin_url" name="setting_linkedin_url" 
+                                   value="{{ settings.get('linkedin_url', '') }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="youtube_url" class="form-label">YouTube URL</label>
+                            <input type="url" class="form-control" id="youtube_url" name="setting_youtube_url" 
+                                   value="{{ settings.get('youtube_url', '') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-transparent">
+                    <h6 class="card-title mb-0">Features & Modules</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enable_blog" name="setting_enable_blog" 
+                                       {{ 'checked' if settings.get('enable_blog', 'true') == 'true' else '' }}>
+                                <label class="form-check-label" for="enable_blog">Enable Blog</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enable_student_mart" name="setting_enable_student_mart"
+                                       {{ 'checked' if settings.get('enable_student_mart', 'true') == 'true' else '' }}>
+                                <label class="form-check-label" for="enable_student_mart">Enable Student Mart</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enable_registration" name="setting_enable_registration"
+                                       {{ 'checked' if settings.get('enable_registration', 'true') == 'true' else '' }}>
+                                <label class="form-check-label" for="enable_registration">Enable User Registration</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="maintenance_mode" name="setting_maintenance_mode"
+                                       {{ 'checked' if settings.get('maintenance_mode', 'false') == 'true' else '' }}>
+                                <label class="form-check-label" for="maintenance_mode">Maintenance Mode</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Save Settings
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h6 class="card-title mb-0">System Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">Version:</small><br>
+                    <strong>FECESA Admin v1.0.0</strong>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Database:</small><br>
+                    <strong>SQLite</strong>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Last Backup:</small><br>
+                    <strong>Not configured</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-transparent">
+                <h6 class="card-title mb-0">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info" onclick="clearCache()">
+                        <i class="fas fa-broom me-2"></i>Clear Cache
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="exportData()">
+                        <i class="fas fa-download me-2"></i>Export Data
+                    </button>
+                    <button class="btn btn-outline-success" onclick="createBackup()">
+                        <i class="fas fa-database me-2"></i>Create Backup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function clearCache() {
+    if (confirm('Are you sure you want to clear the cache?')) {
+        // Implementation would go here
+        alert('Cache cleared successfully!');
+    }
+}
+
+function exportData() {
+    if (confirm('Export all data to JSON format?')) {
+        // Implementation would go here
+        alert('Data export started. You will receive a download link shortly.');
+    }
+}
+
+function createBackup() {
+    if (confirm('Create a backup of the current database?')) {
+        // Implementation would go here
+        alert('Backup created successfully!');
+    }
+}
+</script>
+{% endblock %}
+</div>
