@@ -8,8 +8,9 @@ import os
 from functools import wraps
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '224b95a9a7dbc5ae43b3afa7abdacb3fc57d7b7427d79eee8cab86329acedad7'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fecesa_admin.db'
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///fecesa_admin.db')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = database_ur
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 

@@ -1,0 +1,43 @@
+services:
+  # A Web Service for your Flask application
+  - type: web
+    name: fweb
+    # Use the Python environment
+    env: python
+    # Specify the GitHub repository and branch
+    repo: https://github.com/ThorBuzz/FWeb
+    branch: main # Or master, whichever is your primary branch
+    # Specify the Python version for consistency
+    pythonVersion: "3.11"
+    
+    # --- Build Configuration ---
+    # The command to install all your dependencies
+    buildCommand: "pip install -r requirements.txt"
+    
+    # --- Start Configuration ---
+    # The command to run your app in production using Gunicorn
+    # It looks for the 'app' variable inside the 'app.py' file
+    startCommand: "gunicorn app:app"
+    
+    # --- Environment Variables ---
+    # Set up environment variables for your application
+    envVars:
+      - key: SECRET_KEY
+        # IMPORTANT: This pulls the value from Render's Secret Manager
+        # You will set the actual key in the Render Dashboard, not here.
+        generateValue: true
+      - key: DATABASE_URL
+        # This points to the SQLite file on the persistent disk
+        value: "sqlite:////var/data/fecesa_admin.db"
+
+    # --- Persistent Disk for SQLite Database ---
+    # This is CRITICAL for SQLite on Render. It creates a persistent
+    # disk to store your database file so it doesn't get erased on every deploy.
+    - type: pserv
+      name: fweb-db
+      disk:
+        name: fecesa-db-disk
+        # The location where the disk will be mounted inside your service
+        mountPath: /var/data
+        # Size of the disk in GB (1GB is plenty for SQLite)
+        sizeGB: 1
