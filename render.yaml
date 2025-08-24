@@ -1,56 +1,30 @@
-# The version of the Blueprint specification.
-version: 1
-
-# Define all the resources for your application
-resources:
-  # A persistent disk to store your SQLite database
-  - name: fecesa-db-disk
-    type: disk
-    # The properties for the disk
-    properties:
-      sizeGB: 1 # 1 GB is plenty for a SQLite database
-
-  # Your Flask Web Service
-  - name: fweb
-    type: web
-    # The environment for the service
+# A simple configuration that works on Render's free tier.
+# NOTE: The database will be temporary (ephemeral) with this setup.
+services:
+  # Define your Flask Web Service
+  - type: web
+    name: fweb
     env: python
-    # Link to the repository
     repo: https://github.com/ThorBuzz/FWeb
     branch: main # Or master, whichever is your primary branch
-    # Properties for the web service
-    properties:
-      # Build & Start Commands
-      buildCommand: |
-        pip install -r requirements.txt
-        # This command creates the database on every build
-        python -c "from app import app, db; app.app_context().push(); db.create_all()"
-      startCommand: "gunicorn app:app"
-      
-      # Health Check Path
-      healthCheckPath: /
-      
-      # Environment Variables
-      envVars:
-        - key: PYTHON_VERSION
-          value: "3.11"
-        - key: SECRET_KEY
-          generateValue: true # Render will generate a secure key for you
-        - key: DATABASE_URL
-          # This value comes from the disk we defined above
-          fromDisk:
-            name: fecesa-db-disk
-            path: fecesa_admin.db
-            
-      # This section attaches the disk to your web service
-      disks:
-        - name: fecesa-db-disk # Must match the disk name above
-          mountPath: /var/data # The directory where the disk will be available
-
-# This section tells Render when to apply these changes
-previews:
-  - fromBranch: main # Or master
-    # All resources defined above will be deployed when you push to this branch
-    resources:
-      - resource: fecesa-db-disk
-      - resource: fweb
+    
+    # Build & Start Commands
+    buildCommand: |
+      pip install -r requirements.txt
+      # This command creates the temporary database on every build
+      python -c "from app import app, db; app.app_context().push(); db.create_all()"
+    startCommand: "gunicorn app:app"
+    
+    # Health Check Path
+    healthCheckPath: /
+        
+    # Environment Variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a secure key for you
+      # Note: We are not using a disk, so the database path is a standard relative path.
+      # This file will be created in the instance's temporary storage.
+      - key: DATABASE_URL
+        value: "sqlite:///fecesa_admin.db"
