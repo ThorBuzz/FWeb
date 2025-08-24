@@ -1,32 +1,56 @@
-# The top-level key must be `services` for a Blueprint.
-services:
+# The version of the Blueprint specification.
+version: 1
 
-  # Define your Flask Web Service
-  - type: web
-    name: fweb
+# Define all the resources for your application
+resources:
+  # A persistent disk to store your SQLite database
+  - name: fecesa-db-disk
+    type: disk
+    # The properties for the disk
+    properties:
+      sizeGB: 1 # 1 GB is plenty for a SQLite database
+
+  # Your Flask Web Service
+  - name: fweb
+    type: web
+    # The environment for the service
     env: python
+    # Link to the repository
     repo: https://github.com/ThorBuzz/FWeb
     branch: main # Or master, whichever is your primary branch
-    
-    # Build & Start Commands
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
-    
-    # CORRECT STRUCTURE: The 'disks' key is a property of the service.
-    # It should be at the same indentation level as 'name', 'env', etc.
-    disks:
-      - name: fecesa-db-disk
-        mountPath: /var/data
-        sizeGB: 1
-        
-    # Environment Variables
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.11"
+    # Properties for the web service
+    properties:
+      # Build & Start Commands
+      buildCommand: |
+        pip install -r requirements.txt
+        # This command creates the database on every build
+        python -c "from app import app, db; app.app_context().push(); db.create_all()"
+      startCommand: "gunicorn app:app"
       
-      - key: SECRET_KEY
-        generateValue: true # Render will create a secure, random value
+      # Health Check Path
+      healthCheckPath: /
       
-      # This variable points to the database file on the disk defined above.
-      - key: DATABASE_URL
-        value: "sqlite:////var/data/fecesa_admin.db"
+      # Environment Variables
+      envVars:
+        - key: PYTHON_VERSION
+          value: "3.11"
+        - key: SECRET_KEY
+          generateValue: true # Render will generate a secure key for you
+        - key: DATABASE_URL
+          # This value comes from the disk we defined above
+          fromDisk:
+            name: fecesa-db-disk
+            path: fecesa_admin.db
+            
+      # This section attaches the disk to your web service
+      disks:
+        - name: fecesa-db-disk # Must match the disk name above
+          mountPath: /var/data # The directory where the disk will be available
+
+# This section tells Render when to apply these changes
+previews:
+  - fromBranch: main # Or master
+    # All resources defined above will be deployed when you push to this branch
+    resources:
+      - resource: fecesa-db-disk
+      - resource: fweb
