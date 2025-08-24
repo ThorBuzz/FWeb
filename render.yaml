@@ -1,12 +1,7 @@
-# Top-level key for defining persistent disks
-disks:
-  - name: fecesa-db-disk      # A unique name for this disk resource
-    mountPath: /var/data     # The directory where the disk will be available
-    sizeGB: 1                # The size of the disk
-
-# Top-level key for defining services (like your web app)
+# The top-level key must be `services` for a Blueprint.
 services:
-  # A Web Service for your Flask application
+
+  # Define your Flask Web Service
   - type: web
     name: fweb
     env: python
@@ -17,6 +12,13 @@ services:
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
     
+    # CORRECT STRUCTURE: The 'disks' key is a property of the service.
+    # It should be at the same indentation level as 'name', 'env', etc.
+    disks:
+      - name: fecesa-db-disk
+        mountPath: /var/data
+        sizeGB: 1
+        
     # Environment Variables
     envVars:
       - key: PYTHON_VERSION
@@ -25,7 +27,6 @@ services:
       - key: SECRET_KEY
         generateValue: true # Render will create a secure, random value
       
-      # This variable is the "bridge" to the disk.
-      # Its path MUST match the mountPath defined in the disks section above.
+      # This variable points to the database file on the disk defined above.
       - key: DATABASE_URL
         value: "sqlite:////var/data/fecesa_admin.db"
