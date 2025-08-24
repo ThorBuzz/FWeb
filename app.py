@@ -8,31 +8,10 @@ import os
 from functools import wraps
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-change-this'
+app.config['SECRET_KEY'] = '224b95a9a7dbc5ae43b3afa7abdacb3fc57d7b7427d79eee8cab86329acedad7'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///fecesa_admin.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('main.html')
-
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
-
-@app.route('/student-mart')
-def student_mart():
-    return render_template('student_mart.html')
-
-# @app.route('/dashboard-mart')
-# def dashboard_mart():
-#     return render_template('dashboard_mart.html')  # Create this template if needed
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -61,9 +40,8 @@ class Admin(db.Model):
     def is_anonymous(self):
         return False
 
-    @property
-    def is_active(self):
-        return self.is_active
+    # THE RECURSIVE @property for is_active HAS BEEN REMOVED.
+    # Flask-Login will now correctly use the is_active database column directly.
 
 class News(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,12 +124,23 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Routes
+# --- Public Routes ---
+@app.route('/')
+def index():
+    return render_template('main.html')
 
-@app.route('/student_mart')
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/student-mart')
 def student_mart():
     products = StudentMartItem.query.filter_by(status='available').order_by(StudentMartItem.created_at.desc()).all()
     return render_template('student_mart.html', products=products)
+
+@app.route('/dashboard-mart')
+def dashboard_mart():
+    return render_template('dashboard_mart.html')
 
 @app.route('/programs/<prog>')
 def programs(prog):
@@ -213,7 +202,7 @@ def page_not_found(error):
 def internal_server_error(error):
     return render_template('500.html'), 500
 
-# Admin Routes
+# --- Admin Routes ---
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
@@ -475,7 +464,7 @@ def admin_settings():
     settings_dict = {setting.key: setting.value for setting in settings}
     return render_template('admin/settings.html', settings=settings_dict)
 
-# API Routes for frontend
+# --- API Routes ---
 @app.route('/api/news')
 def api_news():
     news_items = News.query.filter_by(status='published').order_by(News.created_at.desc()).limit(6).all()
@@ -527,6 +516,7 @@ def api_student_mart():
         'image_url': item.image_url
     } for item in items])
 
+# --- Application Runner ---
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

@@ -1,0 +1,104 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    {% if action == 'Edit' %}
+        Edit Program
+    {% else %}
+        Create Program
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            {% if action == 'Edit' %}
+                Edit Academic Program
+            {% else %}
+                Create New Academic Program
+            {% endif %}
+        </h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                <!-- Program Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-bold">Program Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ program.name if program else '' }}" placeholder="e.g., Electrical Engineering" required>
+                </div>
+
+                <!-- Program Code -->
+                <div class="mb-3">
+                    <label for="code" class="form-label fw-bold">Program Code</label>
+                    <input type="text" class="form-control" id="code" name="code" value="{{ program.code if program else '' }}" placeholder="e.g., electrical (all lowercase, no spaces)" required>
+                    <div class="form-text">A unique identifier used in URLs.</div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label fw-bold">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="A short summary of the program.">{{ program.description if program else '' }}</textarea>
+                </div>
+
+                <div class="row">
+                    <!-- Icon -->
+                    <div class="col-md-6 mb-3">
+                        <label for="icon" class="form-label fw-bold">Font Awesome Icon Class</label>
+                        <input type="text" class="form-control" id="icon" name="icon" value="{{ program.icon if program else 'fas fa-graduation-cap' }}" placeholder="e.g., fas fa-bolt">
+                        <div class="form-text">Find icons on the <a href="https://fontawesome.com/icons" target="_blank">Font Awesome website</a>.</div>
+                    </div>
+
+                    <!-- Color -->
+                    <div class="col-md-6 mb-3">
+                        <label for="color" class="form-label fw-bold">Color Theme</label>
+                        <select class="form-select" id="color" name="color">
+                            <option value="primary" {% if program and program.color == 'primary' %}selected{% endif %}>Primary (Blue)</option>
+                            <option value="success" {% if program and program.color == 'success' %}selected{% endif %}>Success (Green)</option>
+                            <option value="info" {% if program and program.color == 'info' %}selected{% endif %}>Info (Teal)</option>
+                            <option value="warning" {% if program and program.color == 'warning' %}selected{% endif %}>Warning (Yellow)</option>
+                            <option value="danger" {% if program and program.color == 'danger' %}selected{% endif %}>Danger (Red)</option>
+                        </select>
+                        <div class="form-text">Used for styling program cards.</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Level -->
+                    <div class="col-md-6 mb-3">
+                        <label for="level" class="form-label fw-bold">Program Level</label>
+                        <select class="form-select" id="level" name="level">
+                            <option value="undergraduate" {% if program and program.level == 'undergraduate' %}selected{% endif %}>Undergraduate</option>
+                            <option value="postgraduate" {% if program and program.level == 'postgraduate' %}selected{% endif %}>Postgraduate</option>
+                        </select>
+                    </div>
+
+                    <!-- Is Active -->
+                    <div class="col-md-6 mb-3 d-flex align-items-center">
+                        <div class="form-check form-switch mt-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" {% if not program or program.is_active %}checked{% endif %}>
+                            <label class="form-check-label fw-bold" for="is_active">Program is Active</label>
+                            <div class="form-text">Inactive programs will not be shown on the public website.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ url_for('admin_programs') }}" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        {% if action == 'Edit' %}
+                            Save Changes
+                        {% else %}
+                            Create Program
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

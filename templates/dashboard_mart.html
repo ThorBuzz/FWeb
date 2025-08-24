@@ -1,0 +1,94 @@
+{% extends "main.html" %}
+
+{% block title %}Seller Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Seller Dashboard</h1>
+        <a href="#" class="btn btn-primary"><i class="fas fa-plus-circle me-2"></i> Add New Product</a>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Active Listings</h5>
+                    <p class="card-text display-4 fw-bold text-primary">12</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Sales</h5>
+                    <p class="card-text display-4 fw-bold text-success">$485</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Messages</h5>
+                    <p class="card-text display-4 fw-bold text-warning">3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Listings Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h4 class="mb-0">My Products</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Date Listed</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Electrical Engineering Principles</td>
+                            <td>$96.00</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>2023-10-20</td>
+                            <td class="text-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Arduino Starter Kit</td>
+                            <td>$45.00</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>2023-10-18</td>
+                            <td class="text-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>FECESA Hoodie</td>
+                            <td>$35.00</td>
+                            <td><span class="badge bg-secondary">Sold</span></td>
+                            <td>2023-10-15</td>
+                            <td class="text-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary disabled" aria-disabled="true"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

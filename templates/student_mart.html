@@ -115,8 +115,7 @@
                     <div class="d-flex gap-3">
                         <a href="#categories" class="btn btn-primary btn-lg px-4"><i class="fas fa-search me-2"></i> Browse Products</a>
                         <a href="#sell" class="btn btn-outline-dark btn-lg px-4"><i class="fas fa-tag me-2"></i> Sell Now</a>
-                        <!-- The 'dashboard_mart' route is not defined in app.py, so this link is temporarily disabled -->
-                        <a href="#" class="btn btn-success btn-lg px-4">
+                        <a href="{{ url_for('dashboard_mart') }}" class="btn btn-success btn-lg px-4">
                             <i class="fas fa-store me-2"></i> Seller Dashboard
                         </a>
                     </div>

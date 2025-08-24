@@ -1,197 +1,107 @@
-
-<!-- Separate template for news form (admin/news/form.html) -->
-<div class="news-form-template" style="display: none;">
 {% extends "admin/base.html" %}
 
-{% block title %}{{ action }} News - FECESA Admin{% endblock %}
-{% block page_title %}{{ action }} News Article{% endblock %}
+{% block title %}
+    {% if action == 'Edit' %}
+        Edit News Article
+    {% else %}
+        Create News Article
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header bg-transparent">
-                <h6 class="card-title mb-0">{{ action }} News Article</h6>
-            </div>
-            <div class="card-body">
-                <form method="POST" id="newsForm">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="title" name="title" 
-                               value="{{ news.title if news else '' }}" required maxlength="200">
-                        <div class="form-text">Maximum 200 characters</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="excerpt" class="form-label">Excerpt</label>
-                        <textarea class="form-control" id="excerpt" name="excerpt" rows="3" maxlength="300">{{ news.excerpt if news else '' }}</textarea>
-                        <div class="form-text">Brief summary for previews (max 300 characters)</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required>{{ news.content if news else '' }}</textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="image_url" class="form-label">Featured Image URL</label>
-                        <input type="url" class="form-control" id="image_url" name="image_url" 
-                               value="{{ news.image_url if news else '' }}">
-                        <div class="form-text">Optional: URL to featured image</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="category" class="form-label">Category</label>
-                            <select class="form-select" id="category" name="category">
-                                <option value="general" {{ 'selected' if news and news.category == 'general' else '' }}>General</option>
-                                <option value="event" {{ 'selected' if news and news.category == 'event' else '' }}>Event</option>
-                                <option value="achievement" {{ 'selected' if news and news.category == 'achievement' else '' }}>Achievement</option>
-                                <option value="announcement" {{ 'selected' if news and news.category == 'announcement' else '' }}>Announcement</option>
-                                <option value="research" {{ 'selected' if news and news.category == 'research' else '' }}>Research</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="draft" {{ 'selected' if news and news.status == 'draft' else '' }}>Draft</option>
-                                <option value="published" {{ 'selected' if news and news.status == 'published' else '' }}>Published</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>{{ 'Update' if news else 'Create' }} Article
-                        </button>
-                        <a href="{{ url_for('admin_news') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            {% if action == 'Edit' %}
+                Edit News Article
+            {% else %}
+                Create News Article
+            {% endif %}
+        </h1>
     </div>
-    
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header bg-transparent">
-                <h6 class="card-title mb-0">Publishing Info</h6>
-            </div>
-            <div class="card-body">
-                {% if news %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                <!-- Title -->
                 <div class="mb-3">
-                    <small class="text-muted">Created:</small><br>
-                    <strong>{{ news.created_at.strftime('%B %d, %Y at %I:%M %p') }}</strong>
+                    <label for="title" class="form-label fw-bold">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ news.title if news else '' }}" required>
                 </div>
+
+                <!-- Content -->
                 <div class="mb-3">
-                    <small class="text-muted">Last Updated:</small><br>
-                    <strong>{{ news.updated_at.strftime('%B %d, %Y at %I:%M %p') }}</strong>
+                    <label for="content" class="form-label fw-bold">Full Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required>{{ news.content if news else '' }}</textarea>
+                    <div class="form-text">
+                        This field supports full HTML for formatting. Consider integrating a rich text editor like TinyMCE or CKEditor for a better user experience.
+                    </div>
                 </div>
+
+                <!-- Excerpt -->
                 <div class="mb-3">
-                    <small class="text-muted">Author:</small><br>
-                    <strong>{{ news.author.username if news.author else 'Unknown' }}</strong>
+                    <label for="excerpt" class="form-label fw-bold">Excerpt (Short Summary)</label>
+                    <textarea class="form-control" id="excerpt" name="excerpt" rows="3">{{ news.excerpt if news else '' }}</textarea>
+                    <div class="form-text">A brief summary that appears in list views.</div>
                 </div>
-                {% endif %}
                 
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <strong>Tips:</strong>
-                    <ul class="mb-0 mt-2">
-                        <li>Keep titles concise and engaging</li>
-                        <li>Write clear excerpts for better previews</li>
-                        <li>Use high-quality images (16:9 ratio recommended)</li>
-                        <li>Save as draft first, then publish when ready</li>
-                    </ul>
+                <!-- Image URL -->
+                <div class="mb-3">
+                    <label for="image_url" class="form-label fw-bold">Image URL</label>
+                    <input type="url" class="form-control" id="image_url" name="image_url" value="{{ news.image_url if news else '' }}" placeholder="https://example.com/image.jpg">
+                    <div class="form-text">Provide a direct link to a publicly accessible image.</div>
                 </div>
-            </div>
+
+                <div class="row">
+                    <!-- Category -->
+                    <div class="col-md-6 mb-3">
+                        <label for="category" class="form-label fw-bold">Category</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="Event" {% if news and news.category == 'Event' %}selected{% endif %}>Event</option>
+                            <option value="Achievement" {% if news and news.category == 'Achievement' %}selected{% endif %}>Achievement</option>
+                            <option value="Announcement" {% if news and news.category == 'Announcement' %}selected{% endif %}>Announcement</option>
+                            <option value="General" {% if news and news.category == 'General' %}selected{% endif %}>General</option>
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6 mb-3">
+                        <label for="status" class="form-label fw-bold">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="draft" {% if news and news.status == 'draft' %}selected{% endif %}>Draft</option>
+                            <option value="published" {% if news and news.status == 'published' %}selected{% endif %}>Published</option>
+                        </select>
+                        <div class="form-text">'Draft' articles will not be visible on the public site.</div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end">
+                    <a href="{{ url_for('admin_news') }}" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        {% if action == 'Edit' %}
+                            Save Changes
+                        {% else %}
+                            Create Article
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
         </div>
-        
-        {% if news and news.image_url %}
-        <div class="card mt-3">
-            <div class="card-header bg-transparent">
-                <h6 class="card-title mb-0">Image Preview</h6>
-            </div>
-            <div class="card-body">
-                <img src="{{ news.image_url }}" class="img-fluid rounded" alt="Featured image">
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<!-- Add any specific JS for this page here, for example, a rich text editor initialization -->
+<!-- 
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('newsForm');
-    const titleInput = document.getElementById('title');
-    const excerptInput = document.getElementById('excerpt');
-    const imageUrlInput = document.getElementById('image_url');
-    
-    // Auto-generate excerpt from content if empty
-    document.getElementById('content').addEventListener('input', function() {
-        if (!excerptInput.value) {
-            const content = this.value.replace(/<[^>]*>/g, ''); // Strip HTML
-            excerptInput.value = content.substring(0, 300);
-        }
-    });
-    
-    // Image URL validation and preview
-    imageUrlInput.addEventListener('input', function() {
-        const url = this.value;
-        if (url && isValidUrl(url)) {
-            // You could add image preview functionality here
-            console.log('Valid image URL:', url);
-        }
-    });
-    
-    // Form submission
-    form.addEventListener('submit', function(e) {
-        const button = form.querySelector('button[type="submit"]');
-        const hideLoading = showLoading(button);
-        
-        // Basic validation
-        if (!titleInput.value.trim()) {
-            e.preventDefault();
-            alert('Please enter a title');
-            hideLoading();
-            return;
-        }
-        
-        if (!document.getElementById('content').value.trim()) {
-            e.preventDefault();
-            alert('Please enter content');
-            hideLoading();
-            return;
-        }
-    });
-    
-    function isValidUrl(string) {
-        try {
-            new URL(string);
-            return true;
-        } catch (_) {
-            return false;
-        }
-    }
-});
+  tinymce.init({
+    selector: 'textarea#content'
+  });
 </script>
+-->
 {% endblock %}
-</div>
-<!-- News Form Template (admin/news/form.html) -->
-{% block extra_js %}
-<script>
-document.getElementById('searchNews').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const rows = document.querySelectorAll('tbody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchTerm) ? '' : 'none';
-    });
-});
-</script>
-{% endblock %}
-
