@@ -1,5 +1,4 @@
 services:
-  # A Web Service for your Flask application
   - type: web
     name: fweb
     # Use the Python environment
