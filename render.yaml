@@ -5,28 +5,27 @@ services:
     env: python
     repo: https://github.com/ThorBuzz/FWeb
     branch: main # Or master, whichever is your primary branch
-    pythonVersion: "3.11"
     
-    # --- Build Configuration ---
-    # The command to install all your dependencies
+    # --- Build & Start Commands ---
     buildCommand: "pip install -r requirements.txt"
-    
-    # --- Start Configuration ---
-    # The command to run your app in production using Gunicorn
     startCommand: "gunicorn app:app"
     
     # --- Persistent Disk for SQLite Database ---
-    # The disk is defined *inside* the web service
     disks:
       - name: fecesa-db-disk
         mountPath: /var/data
         sizeGB: 1
         
     # --- Environment Variables ---
-    # This section is now placed after the disks for better readability
     envVars:
+      # CORRECT WAY TO SET THE PYTHON VERSION
+      - key: PYTHON_VERSION
+        value: "3.11"
+        
+      # Secret key will be generated automatically by Render
       - key: SECRET_KEY
-        generateValue: true # Render will create a secure, random value
+        generateValue: true
+        
+      # Database path on the persistent disk
       - key: DATABASE_URL
-        # This tells SQLAlchemy where to find the database on the persistent disk
         value: "sqlite:////var/data/fecesa_admin.db"
