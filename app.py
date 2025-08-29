@@ -5,11 +5,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+import secrets
 from functools import wraps
 
 app = Flask(__name__)
 database_url = os.environ.get('DATABASE_URL', 'sqlite:///fecesa_admin.db')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+if os.environ.get('SECRET_KEY'):
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+else:
+    # Generate a temporary key for development with warning
+    temp_key = 'dev-key-' + secrets.token_hex(16)
+    app.config['SECRET_KEY'] = temp_key
+    print(f"⚠️  WARNING: Using temporary secret key: {temp_key}")
+    print("⚠️  WARNING: Set SECRET_KEY environment variable for production!")
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
