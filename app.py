@@ -529,14 +529,17 @@ def api_student_mart():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        # Check if any admin exists (Optional: keeps the console message)
         if not Admin.query.first():
-            admin = Admin(
-                username='admin',
-                email='admin@fecesa.edu',
-                password_hash=generate_password_hash('admin123'),
-                role='admin'
-            )
-            db.session.add(admin)
-            db.session.commit()
-            print("Default admin created - username: admin, password: admin123")
+            print("No admin user found. Please create one manually via the Flask shell.")
+            print("Instructions: ")
+            print("1. Run: `flask shell`")
+            print("2. Run the following commands manually:")
+            print("")
+            print("from app import db, Admin")
+            print("from werkzeug.security import generate_password_hash")
+            print("admin = Admin(username='your_username', email='your_email@example.com', password_hash=generate_password_hash('your_secure_password'), role='admin')")
+            print("db.session.add(admin)")
+            print("db.session.commit()")
+            print("exit()")
     app.run(debug=True)
