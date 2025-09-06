@@ -184,3 +184,91 @@ if (document.readyState === 'loading') {
 } else {
     initAll();
 }
+
+// Resource Modal Functionality
+function initResourceModal() {
+    const resourceModal = document.getElementById('resourceModal');
+    if (!resourceModal) return;
+    
+    // Update modal title based on which resource card was clicked
+    resourceModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const resourceType = button.getAttribute('data-resource-type');
+        const modalTitle = resourceModal.querySelector('#modalResourceTitle');
+        
+        // Set the modal title based on resource type
+        if (resourceType === 'course-materials') {
+            modalTitle.textContent = 'Course Materials';
+        } else if (resourceType === 'past-exams') {
+            modalTitle.textContent = 'Past Exams';
+        } else if (resourceType === 'software-tools') {
+            modalTitle.textContent = 'Software Tools';
+        } else if (resourceType === 'career-center') {
+            modalTitle.textContent = 'Career Center';
+        }
+        
+        // Update Google Drive links based on resource type
+        updateResourceLinks(resourceType);
+    });
+    
+    // Add click event to all resource cards
+    document.querySelectorAll('.resource-card').forEach(card => {
+        card.style.cursor = 'pointer';
+    });
+}
+
+// Function to update resource links based on type
+function updateResourceLinks(resourceType) {
+    // These would be your actual Google Drive links
+    const links = {
+        'course-materials': {
+            firstYear: 'https://drive.google.com/drive/folders/course-materials-first-year',
+            secondYear: 'https://drive.google.com/drive/folders/course-materials-second-year',
+            thirdYear: 'https://drive.google.com/drive/folders/course-materials-third-year',
+            allResources: 'https://drive.google.com/drive/folders/course-materials-all'
+        },
+        'past-exams': {
+            firstYear: 'https://drive.google.com/drive/folders/past-exams-first-year',
+            secondYear: 'https://drive.google.com/drive/folders/past-exams-second-year',
+            thirdYear: 'https://drive.google.com/drive/folders/past-exams-third-year',
+            allResources: 'https://drive.google.com/drive/folders/past-exams-all'
+        },
+        'software-tools': {
+            firstYear: 'https://drive.google.com/drive/folders/software-tools-first-year',
+            secondYear: 'https://drive.google.com/drive/folders/software-tools-second-year',
+            thirdYear: 'https://drive.google.com/drive/folders/software-tools-third-year',
+            allResources: 'https://drive.google.com/drive/folders/software-tools-all'
+        },
+        'career-center': {
+            firstYear: 'https://drive.google.com/drive/folders/career-center-first-year',
+            secondYear: 'https://drive.google.com/drive/folders/career-center-second-year',
+            thirdYear: 'https://drive.google.com/drive/folders/career-center-third-year',
+            allResources: 'https://drive.google.com/drive/folders/career-center-all'
+        }
+    };
+    
+    // Update the links in the modal
+    if (links[resourceType]) {
+        document.querySelector('[href*="first-year"]').href = links[resourceType].firstYear;
+        document.querySelector('[href*="second-year"]').href = links[resourceType].secondYear;
+        document.querySelector('[href*="third-year"]').href = links[resourceType].thirdYear;
+        document.querySelector('[href*="all-resources"]').href = links[resourceType].allResources;
+    }
+}
+
+// Add initResourceModal to your initAll function
+function initAll() {
+    console.log('FECESA Website JavaScript Loaded');
+    
+    // Initialize all features
+    initThemeToggle();
+    initNavbarScroll();
+    initBackToTop();
+    initScrollAnimations();
+    initMobileMenu();
+    initSmoothScrolling();
+    initResourceModal(); // Add this line
+    initLoadingOverlay();
+    
+    console.log('All features initialized successfully');
+}
