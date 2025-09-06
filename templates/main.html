@@ -841,81 +841,82 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="text-center mb-4">
-                    <i class="fas fa-folder-open text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h4 id="modalResourceTitle">Resource Title</h4>
-                    <p class="text-muted">Select the academic year to access resources</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" id="resourceBreadcrumb">
+                        <li class="breadcrumb-item active" id="breadcrumbResourceType">Resource Type</li>
+                        <li class="breadcrumb-item" id="breadcrumbCourse">Course</li>
+                        <li class="breadcrumb-item" id="breadcrumbYear">Year</li>
+                    </ol>
+                </nav>
+                
+                <div class="modal-nav">
+                    <button class="modal-nav-btn" id="btnBackToCourse" style="display: none;">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Courses
+                    </button>
+                    <button class="modal-nav-btn" id="btnBackToYear" style="display: none;">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Years
+                    </button>
                 </div>
                 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <a href="https://drive.google.com/drive/folders/example-first-year" class="btn btn-outline-primary w-100 resource-year-btn" target="_blank">
-                            <i class="fas fa-1 me-1"></i> First Year
-                        </a>
+                <div id="courseSelection">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-folder-open text-primary mb-3" style="font-size: 3rem;"></i>
+                        <h4 id="modalResourceTitle">Select a Course</h4>
+                        <p class="text-muted">Choose a course to access resources</p>
                     </div>
-                    <div class="col-md-4">
-                        <a href="https://drive.google.com/drive/folders/example-second-year" class="btn btn-outline-primary w-100 resource-year-btn" target="_blank">
-                            <i class="fas fa-2 me-1"></i> Second Year
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="https://drive.google.com/drive/folders/example-third-year" class="btn btn-outline-primary w-100 resource-year-btn" target="_blank">
-                            <i class="fas fa-3 me-1"></i> Third Year
-                        </a>
+                    
+                    <div class="row g-3 mb-4" id="courseList">
+                        <!-- Courses will be dynamically inserted here -->
                     </div>
                 </div>
                 
-                <div class="mt-4">
-                    <h6 class="mb-3">Popular Resources:</h6>
-                    <div class="resource-list">
-                        <a href="https://drive.google.com/file/d/example-mathematics" class="d-block resource-item p-3 border-bottom" target="_blank">
-                            <div class="d-flex align-items-center">
-                                <div class="file-icon text-primary me-3">
-                                    <i class="fas fa-file-pdf"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">Mathematics 101 Notes</h6>
-                                    <small class="text-muted">Updated: Oct 15, 2023 • 2.4 MB</small>
-                                </div>
-                                <div class="ms-3">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </div>
+                <div id="yearSelection" style="display: none;">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-calendar-alt text-primary mb-3" style="font-size: 3rem;"></i>
+                        <h4 id="modalYearTitle">Select Academic Year</h4>
+                        <p class="text-muted">Choose the academic year for <span id="selectedCourseName"></span></p>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="year-btn" data-year="first">
+                                <i class="fas fa-1"></i>
+                                First Year
                             </div>
-                        </a>
-                        <a href="https://drive.google.com/file/d/example-physics" class="d-block resource-item p-3 border-bottom" target="_blank">
-                            <div class="d-flex align-items-center">
-                                <div class="file-icon text-danger me-3">
-                                    <i class="fas fa-file-powerpoint"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">Physics Fundamentals Slides</h6>
-                                    <small class="text-muted">Updated: Oct 10, 2023 • 5.1 MB</small>
-                                </div>
-                                <div class="ms-3">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="year-btn" data-year="second">
+                                <i class="fas fa-2"></i>
+                                Second Year
                             </div>
-                        </a>
-                        <a href="https://drive.google.com/file/d/example-programming" class="d-block resource-item p-3" target="_blank">
-                            <div class="d-flex align-items-center">
-                                <div class="file-icon text-success me-3">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">Introduction to Programming</h6>
-                                    <small class="text-muted">Updated: Oct 5, 2023 • 3.2 MB</small>
-                                </div>
-                                <div class="ms-3">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="year-btn" data-year="third">
+                                <i class="fas fa-3"></i>
+                                Third Year
                             </div>
-                        </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="resourceLinks" style="display: none;">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-download text-primary mb-3" style="font-size: 3rem;"></i>
+                        <h4 id="modalLinksTitle">Available Resources</h4>
+                        <p class="text-muted">Access resources for <span id="resourceDescription"></span></p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6 class="mb-3">Popular Resources:</h6>
+                        <div class="resource-list" id="resourceFileList">
+                            <!-- Resource links will be dynamically inserted here -->
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="https://drive.google.com/drive/folders/example-all-resources" class="btn btn-primary" target="_blank">
+                <a href="#" class="btn btn-primary" id="downloadAllBtn" target="_blank" style="display: none;">
                     <i class="fas fa-download me-1"></i> Download All Resources
                 </a>
             </div>

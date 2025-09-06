@@ -628,18 +628,33 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.resource-year-btn {
+.course-btn, .year-btn {
     transition: all 0.3s ease;
     border-radius: 8px;
     padding: 12px;
     font-weight: 500;
     text-align: center;
     display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 2px solid #dee2e6;
+    color: #495057;
+    text-decoration: none;
 }
 
-.resource-year-btn:hover {
+.course-btn:hover, .year-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #0d6efd;
+    color: #0d6efd;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+    text-decoration: none;
+}
+
+.course-btn i, .year-btn i {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .resource-item {
@@ -662,4 +677,37 @@
 .resource-list {
     max-height: 300px;
     overflow-y: auto;
+}
+
+.breadcrumb {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+.modal-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-nav-btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+}
+
+.modal-nav-btn:hover {
+    background-color: #e9ecef;
+}
+
+.modal-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
